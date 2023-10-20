@@ -130,26 +130,3 @@ vector<int> bruhat_matrix_interval(vector<int> u, vector<int> v, int u_index, in
     intersection_vec.push_back(u_index); intersection_vec.push_back(v_index);
     return intersection_vec;
 }
-
-//int main(void){
-//
-//    current_sn_group = 7;
-//    int f_n = factorial(current_sn_group);
-//
-//    /*  Allocating space inside b_matrix */
-//    b_matrix = new int*[f_n];
-//    for(int i = 0; i < f_n; i++){
-//       b_matrix[i] = new int[f_n];
-//    }
-//    //bruhat_matrix_all_sn(8);
-//    //bruhat_matrix_write();
-//
-//    bruhat_matrix_initiate();
-//    bruhat_matrix_write("bruhat-lol");
-//
-//    /*  freeing necessary memory */
-//    for(int i = 0; i < f_n; i++){
-//       delete[] b_matrix[i];
-//    }
-//    delete[] b_matrix;
-//}
