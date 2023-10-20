@@ -47,9 +47,9 @@ pair<bruhat_graph, map<vector<int>, PermtData>> bruhat_graph_all_sn(int n){
     auto permts_data = all_p_data;
 
     bruhat_graph bruhat_g;
-    
+
     //this part adds vertices to the graph
-    for(auto itr = permts_data.begin(); itr != permts_data.end(); itr++){ 
+    for(auto itr = permts_data.begin(); itr != permts_data.end(); itr++){
         PermtVertex temp = {itr->first, itr->second.length, itr->second.index};
         boost::add_vertex(temp, bruhat_g);
     }
@@ -59,7 +59,7 @@ pair<bruhat_graph, map<vector<int>, PermtData>> bruhat_graph_all_sn(int n){
     for(boost::tie(vitr, vitr_end) = vertices(bruhat_g); vitr != vitr_end; vitr++){
         //this part calculates which pairs can be used in order to increase the length by 1
         auto transp_necessary = transp_1length_diff(bruhat_g[*vitr].permt);
-        
+
         //if there are possible pairs, we may continue
         if(!transp_necessary.empty()){
             for(auto tempitr = transp_necessary.begin(); tempitr != transp_necessary.end(); tempitr++){
@@ -67,7 +67,7 @@ pair<bruhat_graph, map<vector<int>, PermtData>> bruhat_graph_all_sn(int n){
                 //Applying the transposition, from the right side
                 tempvec = permt_multp_right(tempvec, *tempitr);
 
-                //Searching for the index value of the obtained permutation in our database 
+                //Searching for the index value of the obtained permutation in our database
                 //this happens in logarithmic time
                 auto target_index = permts_data.find(tempvec)->second.index;
                 auto target_vertex = boost::vertex(target_index, bruhat_g);
@@ -90,11 +90,11 @@ bool bruhat_compare_with_graph(vector<int> permt1, vector<int> permt2, pair<bruh
     // 'p' stand for the pair that is provided as an input, this is basically the outcome
     // of the function bruhat_graph_all_sn() defined above
     int permt1_len = p.second[permt1].length, permt2_len = p.second[permt2].length;
-    int max_len = ((permt2.size() * (permt2.size() - 1)) / 2);   
+    int max_len = ((permt2.size() * (permt2.size() - 1)) / 2);
     // identity element will be smaller than anything, provided that permt2 is not also identity
     if(p.second[permt1].length == 0 && p.second[permt2].length == 0) return false;
     else if(p.second[permt1].length == 0) return true;
-    
+
     // reverse identity will be bigger than any element, with respect to bruhat order
     // the maximum length a permutation can have in S_n is , n * (n - 1) / 2 , which is only possible
     // when the permutation is reverse identity
@@ -114,7 +114,7 @@ bool bruhat_compare_helper(bruhat_graph g, vector<int> permt1, vector<int> permt
     auto permt1_vertex = boost::vertex(permt1_index, g), permt2_vertex = boost::vertex(permt2_index, g);
     boost::graph_traits<bruhat_graph>::adjacency_iterator aditr, aditr_end;
     boost::tie(aditr, aditr_end) = boost::adjacent_vertices(permt1_vertex, g);
-    
+
     // if we have reached the length we are looking for, we check all the
     // connected elements to see if we have a match
     if(g[*aditr].length == g[permt2_vertex].length){
@@ -170,7 +170,7 @@ bool bruhat_compare(vector<int> permt1, vector<int> permt2, int p_len1, int p_le
     }
     // if the above loop did not return anything, then we return true
     return true;
-} 
+}
 
 /*
  Return the bruhat graph where 'w' is an element of the returned graph iff
@@ -194,14 +194,14 @@ bool bruhat_compare(vector<int> permt1, vector<int> permt2, int p_len1, int p_le
  The bruhat_graph_all_sn function defined above also uses the same data structures
 */
 pair<bruhat_graph, map<vector<int>, PermtData>>bruhat_graph_between_permt(vector<int> permt1, vector<int> permt2, PermtData permt1_data, PermtData permt2_data, bool use_b_matrix){
-    
+
     if(permt1_data.length == -1 && all_p_data[permt1].length != -1) permt1_data = all_p_data[permt1];
     else if(permt1_data.length == -1) permt1_data = {permt_inversion_amount(permt1), all_p_data[permt1].index};
     if(permt2_data.length == -1 && all_p_data[permt2].length != -1) permt2_data = all_p_data[permt2];
     else if(permt1_data.length == -1) permt1_data = {permt_inversion_amount(permt2), all_p_data[permt2].index};
     int current_length = permt1_data.length, desired_length = permt2_data.length;
 
-    
+
     bruhat_graph g;
     // Trivial cases are handled here
     if(current_length == desired_length - 1){
@@ -223,22 +223,22 @@ pair<bruhat_graph, map<vector<int>, PermtData>>bruhat_graph_between_permt(vector
         road_map[permt1] = {current_length, 0};
         if(use_b_matrix) return between_permt_helper(permt1, permt2, permt1_data, permt2_data, g, road_map, true);
         else             return between_permt_helper(permt1, permt2, permt1_data, permt2_data, g, road_map, false);
-    } 
+    }
 }
 
 // This function is written to be used with bruhat_graph_between_permt function
 // It does not have much meaning on its own
 pair<bruhat_graph, map<vector<int>, PermtData>> between_permt_helper(vector<int> permt1, vector<int> permt2, PermtData permt1_data, PermtData permt2_data, bruhat_graph g, map<vector<int>, PermtData> road_map, bool use_b_matrix){
-    
+
     if(permt1_data.length == -1 && all_p_data[permt1].length != -1) permt1_data = all_p_data[permt1];
     else if(permt1_data.length == -1) permt1_data = {permt_inversion_amount(permt1), all_p_data[permt1].index};
     if(permt1_data.length == -1 && all_p_data[permt1].length != -1) permt1_data = all_p_data[permt1];
     else if(permt1_data.length == -1) permt1_data = {permt_inversion_amount(permt1), all_p_data[permt1].index};
     int current_length = permt1_data.length, desired_length = permt2_data.length;
-    
+
     int total_vertices = boost::num_vertices(g);
     auto permt1_vertex = boost::vertex(permt1_data.index, g);
-    
+
     if(current_length < desired_length -1){
         auto transp_necessary = transp_1length_diff(permt1);
         // this will only store adjacent vertices that is -comparable- to permt2
@@ -254,7 +254,7 @@ pair<bruhat_graph, map<vector<int>, PermtData>> between_permt_helper(vector<int>
             else{
                 if(!bruhat_compare(temp_vec, permt2, temp_vec_data.length, permt2_data.length)) continue;
             }
-            
+
             // There is a chance temp_vec was already added before, so we check whether or not
             // it is in road_map
             auto temp_vec_ptr = road_map.find(temp_vec);
@@ -265,13 +265,13 @@ pair<bruhat_graph, map<vector<int>, PermtData>> between_permt_helper(vector<int>
 
                 // We may construct the edge right away because we know temp_vec is comparable to permt2
                 boost::add_edge(permt1_vertex, temp_vertex_g, g);
-                
+
                 // Update necessary data
                 road_map[temp_vec] = {current_length+1, total_vertices};
                 adjacent_vertices.push_back(temp_vec);
             }
             else{ // if temp_vec was already added as a vertex, we just create the edge
-                auto temp_vertex_g = boost::vertex(temp_vec_ptr->second.index, g); 
+                auto temp_vertex_g = boost::vertex(temp_vec_ptr->second.index, g);
                 boost::add_edge(permt1_vertex, temp_vertex_g, g);
             }
         }
@@ -297,7 +297,7 @@ pair<bruhat_graph, map<vector<int>, PermtData>> between_permt_helper(vector<int>
          When the function call reaches here, vertices below the desired_length is already
          constructed, and we know permt1 is comparable to permt2, because we check this above
          before reaching here. Therefore, we only add the final vertex permt2 and necessary edges.
-        
+
          If the last vertex is not permt2 we may add it
         */
         auto permt2_ptr = road_map.find(permt2);
@@ -309,14 +309,14 @@ pair<bruhat_graph, map<vector<int>, PermtData>> between_permt_helper(vector<int>
         }
         else{
             permt2_vertex = boost::vertex(permt2_ptr->second.index, g);
-        } 
+        }
         // Adding the necessary edge
         boost::add_edge(permt1_vertex, permt2_vertex, g);
         // when changes are made to the graph, we return it back
         // together with the needed data as a pair
         return {g, road_map};
     }
-} 
+}
 
 /*
  If one already has the graph between two permutations u and v , then it is pointless to
@@ -328,14 +328,14 @@ pair<bruhat_graph, map<vector<int>, PermtData>> between_permt_helper(vector<int>
  it does not construct a graph, it is assumed that the programmer already constructed a graph
 */
 map<vector<int>, PermtData> bruhat_subgraph_between_permt(vector<int> permt1, vector<int> permt2, bruhat_graph g, int permt1_index, int permt2_index){
-    map<vector<int>, PermtData> result = {}; 
+    map<vector<int>, PermtData> result = {};
     auto permt1_vertex = boost::vertex(permt1_index, g);
     auto permt2_vertex = boost::vertex(permt2_index, g);
     int current_length = g[permt1_vertex].length, desired_length = g[permt2_vertex].length;
     // adding permt1 itself to the result map, and also permt2
     result[permt1] = {current_length, permt1_index};
     result[permt2] = {desired_length, permt2_index};
-    
+
     //trivial case
     if(permt1 == permt2) return result;
 
@@ -347,7 +347,7 @@ map<vector<int>, PermtData> bruhat_subgraph_between_permt(vector<int> permt1, ve
 // This functioned is programmed to work together with bruhat_subgraph_between_permt function defined above
 // It does not have much meaning on its own
 map<vector<int>, PermtData> bruhat_subgraph_helper(vector<int> permt1, vector<int> permt2, bruhat_graph g, int permt1_index, int permt2_index, map<vector<int>, PermtData> result_map){
-    map<vector<int>, PermtData> result = result_map; 
+    map<vector<int>, PermtData> result = result_map;
     auto permt1_vertex = boost::vertex(permt1_index, g);
     auto permt2_vertex = boost::vertex(permt2_index, g);
     int current_length = g[permt1_vertex].length, desired_length = g[permt2_vertex].length;
@@ -367,7 +367,7 @@ map<vector<int>, PermtData> bruhat_subgraph_helper(vector<int> permt1, vector<in
         }
         // Now we are ready to check other permutations that are connected to the ones we found
         for(auto itr = adjacent_vertices.begin(); itr != adjacent_vertices.end(); itr++){
-            result = bruhat_subgraph_helper(itr->first, permt2, g, itr->second, permt2_index, result);    
+            result = bruhat_subgraph_helper(itr->first, permt2, g, itr->second, permt2_index, result);
         }
         return result;
     }
@@ -378,26 +378,3 @@ map<vector<int>, PermtData> bruhat_subgraph_helper(vector<int> permt1, vector<in
     */
     else return result;
 }
-
-
-// int main(void){
-//     //auto lulvec = bruhat_graph_all_sn(10);
-//     // this part just creates the string version of our permutation, so that we can name our vertex
-//     // vector<string> permt_names;
-//     // for(auto itr = lulvec.second.begin(); itr != lulvec.second.end(); itr++){
-//     //     string temp_permt_name;
-//     //     for(auto itr2 = itr->first.begin(); itr2 != itr->first.end(); itr2++){
-//     //         temp_permt_name.push_back(*itr2 + 48); // 48 is added to obtain the ASCII value
-//     //     }
-//     //     permt_names.push_back(temp_permt_name);
-//     // }
-
-//     //boost:write_graphviz(cout, lulvec.first, boost::make_label_writer(&permt_names[0]));
-//     //boost:write_graphviz(cout, lulvec.first);
-//     //get(&PermtVertex::permt, lulvec.first, boost::vertex(0, lulvec.first));
-//     auto bruhat_data = bruhat_graph_between_permt({1,2,3,4,5}, {5,3,1,2,4});
-//     auto lulmap = bruhat_subgraph_between_permt({1,2,3,4,5}, {3,1,2,5,4}, bruhat_data.first, bruhat_data.second[{1,2,3,4,5}].index, bruhat_data.second[{3,1,2,5,4}].index);
-//     for(auto itr = lulmap.begin(); itr != lulmap.end(); itr++){
-//         print1d(stdout, itr->first); printf("\n");
-//     }
-// }

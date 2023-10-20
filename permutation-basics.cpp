@@ -79,7 +79,7 @@ vector<vector<int>> permt_all_sn(int n){
     vector<int> temp;
     for(int i = 1; i <= n; i++) temp.push_back(i);
     result.push_back(temp); // this is the first element
-    
+
     //as long as new permutations are available, this loop will continue
     while(next_permutation(temp.begin(), temp.end())) result.push_back(temp);
     return result;
@@ -153,7 +153,7 @@ pair<vector<int>, int> merge_permt(vector<int> permt, int temp_permt[], int left
         temp_permt[left_i_temp] = permt[left_i_permt];
         left_i_temp++; left_i_permt++;
     }
-    
+
     //similar as above, if anything is left on the right block, add it to temp_permt
     while(mid_i <= right){
         temp_permt[left_i_temp] = permt[mid_i];
@@ -163,13 +163,13 @@ pair<vector<int>, int> merge_permt(vector<int> permt, int temp_permt[], int left
     //now, left and right block is merged and it is stored inside temp_permt, we shall push the data to the original permt
     for(left_i_permt = left; left_i_permt <= right; left_i_permt++)
         permt[left_i_permt] = temp_permt[left_i_permt];
-    
+
     pair<vector<int>, int> result; result.first = permt; result.second = permt_inversions;
     return result;
 }
 
 // return inverse of a given permutation, in line notation
-vector<int> permt_inverse(vector<int> permt){ 
+vector<int> permt_inverse(vector<int> permt){
     vector<int> result = permt; result.resize(permt.size());
     for(int i = 0; i < permt.size(); i++){
         result[permt[i] - 1] = i + 1;
@@ -179,8 +179,8 @@ vector<int> permt_inverse(vector<int> permt){
 
 // returns a list of lengths of the provided permt_list, in the same order
 vector<int> permt_lengths(vector<vector<int>> permt_list){
-    vector<int>result; result.resize(permt_list.size());  
-    for(int i = 0; i < permt_list.size(); i++){ 
+    vector<int>result; result.resize(permt_list.size());
+    for(int i = 0; i < permt_list.size(); i++){
         result[i] = permt_inversion_amount(permt_list[i]);
     }
     return result;
@@ -223,7 +223,7 @@ bool sorted_by_length_helper(pair<vector<int>, int> permt1, pair<vector<int>, in
 //this function multipilies the permutation with a given transposition, from right
 vector<int> permt_multp_right(vector<int> permt, pair<int, int> transposition){
     //this operation simply swaps the elements in the corresponding location
-    // IT IS ASSUMED THAT VALUES IN THE TRANSPOSITION IS INSIDE 'PERMT' , use with caution ** 
+    // IT IS ASSUMED THAT VALUES IN THE TRANSPOSITION IS INSIDE 'PERMT' , use with caution **
     int temp = permt[transposition.first - 1];
     permt[transposition.first - 1] = permt[transposition.second - 1];
     permt[transposition.second - 1] = temp;
@@ -233,7 +233,7 @@ vector<int> permt_multp_right(vector<int> permt, pair<int, int> transposition){
 //this function multipilies the permutation with a given transposition, from left
 vector<int> permt_multp_left(vector<int> permt, pair<int, int> transposition){
     //this operation directly swaps (i, j) in the permutation, as the the operation is from left
-    // IT IS ASSUMED THAT VALUES IN THE TRANSPOSITION IS INSIDE 'PERMT' , use with caution ** 
+    // IT IS ASSUMED THAT VALUES IN THE TRANSPOSITION IS INSIDE 'PERMT' , use with caution **
     auto ptr_first = find(permt.begin(), permt.end(), transposition.first);
     auto ptr_second = find(permt.begin(), permt.end(), transposition.second);
     int temp = *ptr_first;
@@ -262,9 +262,9 @@ vector<pair<int, int>> transp_1length_diff(vector<int> permt){
                     result.push_back({i+1, j+1});
                     least_biggest = permt[j];
                 }
-            }        
+            }
         }
-    } 
+    }
     return result;
 }
 
@@ -289,10 +289,10 @@ int permt_first_right_descent(vector<int> permt){
 
 vector<int> permt_prompt(void){
   char temp_char = -1;
-  string unit_element = ""; 
+  string unit_element = "";
   vector<int> temp_vec;
   printf("\n%s\n%s\n%s", "  Enter a permutation below in line notation, use ane whitespace between any element.",
-                         "  For example:  1 2 3 4 5 6 7 8 9 10 11 12 would be the identity permutation in S_12", 
+                         "  For example:  1 2 3 4 5 6 7 8 9 10 11 12 would be the identity permutation in S_12",
                          "  Input: ");
   temp_char = getc(stdin);
   while(temp_char != '\n'){
@@ -300,7 +300,7 @@ vector<int> permt_prompt(void){
         cout << "  You either used a traling/ending whitespace or there are multiple spaces between elements!\n";
         exit(0);
     }
-    else if(temp_char == ' '){ // if we have a whitespace while unit_element being nonempty 
+    else if(temp_char == ' '){ // if we have a whitespace while unit_element being nonempty
                                // then we add the necessary integer
         int temp_int = 0;
         for(int i = 0; i < unit_element.size(); i++) temp_int += (take_power10(unit_element.size() -1-i)*(unit_element[i]-48));
@@ -312,7 +312,7 @@ vector<int> permt_prompt(void){
       cout << "  The input should contain only numbers!\n";
       exit(0);
     }
-    else{ 
+    else{
         unit_element.push_back(temp_char);
         temp_char = getc(stdin);
     }
@@ -337,25 +337,3 @@ string f_name_prompt(void){
   }
   return file_name;
 }
-
-
-// int main(void){
-//     // print2d(permt_all_sn(5), 4);
-//     // auto lulvec = permt_with_lenghts(permt_all_sn(4));
-//     //     
-//     // for(auto itr = lulvec.begin(); itr != lulvec.end(); itr++){
-//     //     print1d(itr->first); printf(" has length %d\n", itr->second);
-//     //     //cout << ((((i + 1) % 6) == 0) ? "\n" : " ");
-//     // }
-//     pair<int, int> t1; t1.first = 1; t1.second=5;
-//     vector<int> permt = {1,2,3,5,4};
-//     permt = permt_multp_left(permt, t1);
-//     print1d(stdout, permt); printf("\n");
-//     //printf("%d\n", permt_inversion_amount({2,3,4,1}));
-//     
-//     //auto lulvec = transp_1length_diff({3,9,6,7,5,2,1,4,8,10});
-//     auto lulvec = permt_with_extra_data(permt_all_sn(8));
-//     for(auto itr = lulvec.begin(); itr != lulvec.end(); itr++){
-//         print1d(stdout, itr->first); printf(" %d %d\n",itr->second.length, itr->second.index);
-//     }
-// }
